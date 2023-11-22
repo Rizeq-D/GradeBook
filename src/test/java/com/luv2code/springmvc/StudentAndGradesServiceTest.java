@@ -81,7 +81,6 @@ public class StudentAndGradesServiceTest {
         assertEquals(5, collegeStudents.size());
 
     }
-
     @AfterEach
     public void setUpAfterTransaction() {
         jdbc.execute("DELETE FROM student");
