@@ -130,6 +130,10 @@ public class StudentAndGradesServiceTest {
     public void deleteGradeService() {
         assertEquals(1, studentService.deleteGrade(1, "math"),
                 "Return student id after delete");
+        assertEquals(1, studentService.deleteGrade(1, "science"),
+                "Return student id after delete");
+        assertEquals(1, studentService.deleteGrade(1, "history"),
+                "Return student id after delete");
     }
     @AfterEach
     public void setUpAfterTransaction() {
