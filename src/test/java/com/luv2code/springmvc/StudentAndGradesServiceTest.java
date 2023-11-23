@@ -1,8 +1,10 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.HistoryGrade;
 import com.luv2code.springmvc.models.MathGrade;
 import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.ScienceGradeDao;
 import com.luv2code.springmvc.repository.StudentDao;
@@ -35,6 +37,8 @@ public class StudentAndGradesServiceTest {
     MathGradesDao mathGradeDao;
     @Autowired
     private ScienceGradeDao scienceGradeDao;
+    @Autowired
+    private HistoryGradesDao historyGradesDao;
 
     @BeforeEach
     public void setupDatabase() {
@@ -95,14 +99,17 @@ public class StudentAndGradesServiceTest {
         // create the grade
         assertTrue(studentService.createGrade(85, 1, "math"));
         assertTrue(studentService.createGrade(60, 1, "science"));
+        assertTrue(studentService.createGrade(100, 1, "history"));
 
         // get all grades with student ID
         Iterable<MathGrade> mathGrades = mathGradeDao.findGradeByStudentId(1);
         Iterable<ScienceGrade> scienceGrades = scienceGradeDao.findGradeByStudentId(1);
+        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(1);
 
         // verify there is grades
         assertTrue(mathGrades.iterator().hasNext(),"Student has math grades");
         assertTrue(scienceGrades.iterator().hasNext(),"Student has science grades");
+        assertTrue(historyGrades.iterator().hasNext(),"Student has history grades");
 
     }
     @AfterEach
