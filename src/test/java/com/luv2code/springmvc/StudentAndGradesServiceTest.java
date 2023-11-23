@@ -19,6 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,9 @@ public class StudentAndGradesServiceTest {
     public void setupDatabase() {
         jdbc.execute("insert into student(id, firstname, lastname, email_address) " +
                 "values (1, 'Eric', 'Roby', 'eric.roby@luv2code_school.com')");
+        jdbc.execute("insert into math_grade(id, student_id, grade) values (1, 1, 100.00)");
+        jdbc.execute("insert into history_grade(id, student_id, grade) values (1, 1, 100.00)");
+        jdbc.execute("insert into science_grade(id, student_id, grade) values (1, 1, 100.00)");
     }
 
     @Test
@@ -107,9 +111,12 @@ public class StudentAndGradesServiceTest {
         Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(1);
 
         // verify there is grades
-        assertTrue(mathGrades.iterator().hasNext(),"Student has math grades");
-        assertTrue(scienceGrades.iterator().hasNext(),"Student has science grades");
-        assertTrue(historyGrades.iterator().hasNext(),"Student has history grades");
+        assertTrue(((Collection<MathGrade>) mathGrades).size() == 2,
+                "Student has math grades");
+        assertTrue(((Collection<ScienceGrade>) scienceGrades).size() == 2,
+                "Student has science grades");
+        assertTrue(((Collection<HistoryGrade>) historyGrades).size() == 2,
+                "Student has history grades");
 
     }
     @Test
@@ -122,6 +129,9 @@ public class StudentAndGradesServiceTest {
     @AfterEach
     public void setUpAfterTransaction() {
         jdbc.execute("DELETE FROM student");
+        jdbc.execute("DELETE FROM math_grade");
+        jdbc.execute("DELETE FROM science_grade");
+        jdbc.execute("DELETE FROM history_grade");
     }
 
 }
