@@ -1,9 +1,6 @@
 package com.luv2code.springmvc;
 
-import com.luv2code.springmvc.models.CollegeStudent;
-import com.luv2code.springmvc.models.HistoryGrade;
-import com.luv2code.springmvc.models.MathGrade;
-import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.ScienceGradeDao;
@@ -44,7 +41,7 @@ public class StudentAndGradesServiceTest {
     @BeforeEach
     public void setupDatabase() {
         jdbc.execute("insert into student(id, firstname, lastname, email_address) " +
-                "values (1, 'Eric', 'Roby', 'eric.roby@luv2code_school.com')");
+                "values (1, 'Jalta', 'Co', 'jalta@gmail.com')");
         jdbc.execute("insert into math_grade(id, student_id, grade) values (1, 1, 100.00)");
         jdbc.execute("insert into history_grade(id, student_id, grade) values (1, 1, 100.00)");
         jdbc.execute("insert into science_grade(id, student_id, grade) values (1, 1, 100.00)");
@@ -53,11 +50,11 @@ public class StudentAndGradesServiceTest {
     @Test
     public void createStudentService() {
 
-        studentService.createStudent("Chad", "Darby", "chad.darby@luv2code_school.com");
+        studentService.createStudent("Maher", "co", "maher@gmail.com");
 
-        CollegeStudent student = studentDao.findByEmailAddress("chad.darby@luv2code_school.com");
+        CollegeStudent student = studentDao.findByEmailAddress("maher@gmail.com");
 
-        assertEquals("chad.darby@luv2code_school.com", student.getEmailAddress(), "find by email");
+        assertEquals("maher@gmail.com", student.getEmailAddress(), "find by email");
         }
 
     @Test
@@ -156,6 +153,28 @@ public class StudentAndGradesServiceTest {
                 "student should have 0 id");
         assertEquals(0, studentService.deleteGrade(1, "literature"),
                 "student should have a literature class");
+    }
+    @Test
+    public void studentInformation() {
+
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(1);
+
+        assertNotNull(gradebookCollegeStudent);
+
+        assertEquals(1, gradebookCollegeStudent.getId());
+        assertEquals("Jalta", gradebookCollegeStudent.getFirstname());
+        assertEquals("Co", gradebookCollegeStudent.getLastname());
+        assertEquals("jalta@gmail.com", gradebookCollegeStudent.getEmailAddress());
+
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size() == 1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size() == 1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size() == 1);
+    }
+    @Test
+    public void studentInformationServiceReturnNull() {
+
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(0);
+        assertNull(gradebookCollegeStudent);
     }
     @AfterEach
     public void setUpAfterTransaction() {
