@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -46,27 +47,45 @@ public class GradebookControllerTest {
     private StudentDao studentDao;
     @Mock
     StudentAndGradesService studentAndGradesServiceMock;
+    @Value("${sql.script.create.student}")
+    private String sqlAddStudent;
+    @Value("${sql.script.create.math.grade}")
+    private String sqlAddMathStudent;
+    @Value("${sql.script.create.science.grade}")
+    private String sqlAddScienceStudent;
+    @Value("${sql.script.create.history.grade}")
+    private String sqlAddHistoryStudent;
+    @Value("${sql.script.delete.student}")
+    private String sqlDeleteStudent;
+    @Value("${sql.script.delete.math.grade}")
+    private String sqlDeleteMathGrade;
+    @Value("${sql.script.delete.science.grade}")
+    private String sqlDeleteScienceGrade;
+    @Value("${sql.script.delete.history.grade}")
+    private String sqlDeleteHistoryGrade;
     @BeforeAll
     public static void setUp() {
         request= new MockHttpServletRequest();
-        request.setParameter("firstname", "Chad");
-        request.setParameter("lastname", "Darby");
-        request.setParameter("emailAddress", "chad.darby@luv2code_school.com");
+        request.setParameter("firstname", "Maher");
+        request.setParameter("lastname", "Co");
+        request.setParameter("emailAddress", "maher@gmail.com");
     }
 
     @BeforeEach
     public void setupDatabase() {
-        jdbc.execute("insert into student(id, firstname, lastname, email_address) " +
-                "values (1, 'Eric', 'Roby', 'eric.roby@luv2code_school.com')");
+        jdbc.execute(sqlAddStudent);
+        jdbc.execute(sqlAddMathStudent);
+        jdbc.execute(sqlAddScienceStudent);
+        jdbc.execute(sqlAddHistoryStudent);
     }
     @Test
     public void getStudentAndHttpRequest() throws Exception {
 
         CollegeStudent student1 = new GradebookCollegeStudent(
-                "Eric", "Roby", "eric.roby@luv2code_school.com");
+                "Jalta", "Co", "jalta@gmail.com");
 
         CollegeStudent student2 = new GradebookCollegeStudent(
-                "Chad", "Darby", "chad.darby@luv2code_school.com");
+                "Maher", "Co", "maher@gmail.com");
 
         List<CollegeStudent> collegeStudentList = new ArrayList<>(Arrays.asList(student1, student2));
 
@@ -85,7 +104,7 @@ public class GradebookControllerTest {
     public void createStudentHttpRequest() throws Exception {
 
         CollegeStudent student1 = new CollegeStudent(
-                "Eric", "Roby", "eric.roby@luv2code_school.com");
+                "Jalta", "Co", "jalta@gmail.com");
 
         List<CollegeStudent> collegeStudentList = new ArrayList<>(Arrays.asList(student1));
 
@@ -104,7 +123,7 @@ public class GradebookControllerTest {
 
         ModelAndViewAssert.assertViewName(mva, "index");
 
-        CollegeStudent verifyStudent = studentDao.findByEmailAddress("chad.darby@luv2code_school.com");
+        CollegeStudent verifyStudent = studentDao.findByEmailAddress("maher@gmail.com");
 
         assertNotNull(verifyStudent, "Student should be found");
     }
@@ -137,7 +156,10 @@ public class GradebookControllerTest {
 
     @AfterEach
     public void setUpAfterTransaction() {
-        jdbc.execute("DELETE FROM student");
+        jdbc.execute(sqlDeleteStudent);
+        jdbc.execute(sqlDeleteMathGrade);
+        jdbc.execute(sqlDeleteScienceGrade);
+        jdbc.execute(sqlDeleteHistoryGrade);
     }
 
 }
