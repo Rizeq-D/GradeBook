@@ -72,14 +72,29 @@ public class StudentAndGradesServiceTest {
 
         Optional<CollegeStudent> deleteCollegeStudent = studentDao.findById(1);
 
+        Optional<MathGrade> deleteMathGrade = mathGradeDao.findById(1);
+        Optional<ScienceGrade> deleteScienceGrade = scienceGradeDao.findById(1);
+        Optional<HistoryGrade> deleteHistoryGrade = historyGradesDao.findById(1);
+
         assertTrue(deleteCollegeStudent.isPresent(), "Return true");
+
+        assertTrue(deleteMathGrade.isPresent());
+        assertTrue(deleteScienceGrade.isPresent());
+        assertTrue(deleteHistoryGrade.isPresent());
 
         studentService.deleteStudent(1);
 
         deleteCollegeStudent = studentDao.findById(1);
 
+        deleteMathGrade = mathGradeDao.findById(1);
+        deleteScienceGrade = scienceGradeDao.findById(1);
+        deleteHistoryGrade = historyGradesDao.findById(1);
+
         assertFalse(deleteCollegeStudent.isPresent(), "Return false");
 
+        assertFalse(deleteMathGrade.isPresent());
+        assertFalse(deleteScienceGrade.isPresent());
+        assertFalse(deleteHistoryGrade.isPresent());
     }
 
     @Sql("/insertData.sql")
