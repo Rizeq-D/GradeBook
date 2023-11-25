@@ -202,6 +202,19 @@ public class GradebookControllerTest {
 
         assertEquals(2, student.getStudentGrades().getMathGradeResults().size());
     }
+    @Test
+    public void createAValidGradeHttpRequestStudentDoesNotExistEmptyResponse() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(post("/grades")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grade", "85.00")
+                .param("gradeType", "math")
+                .param("studentId", "0")).andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "error");
+    }
     @AfterEach
     public void setUpAfterTransaction() {
         jdbc.execute(sqlDeleteStudent);
